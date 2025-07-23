@@ -17,10 +17,8 @@ import java.util.Set;
 public class Tag {
 
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id", updatable = false, nullable = false, unique = true)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @Column(name = "name", nullable = false, unique = true)
     private String name;
@@ -32,10 +30,5 @@ public class Tag {
     @ManyToMany(mappedBy = "tags")
     private Set<Snippet> snippets = new HashSet<>();
 
-    @PrePersist
-    public void generateSlug() {
-        if (this.slug == null && this.name != null) {
-            this.slug = name.trim().toLowerCase().replaceAll("[^a-z0-9]+", "-");
-        }
-    }
+
 }

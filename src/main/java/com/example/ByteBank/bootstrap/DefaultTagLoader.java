@@ -3,6 +3,7 @@ package com.example.ByteBank.bootstrap;
 
 
 import com.example.ByteBank.models.db.Tag;
+import com.example.ByteBank.service.TagService;
 import com.example.ByteBank.repo.TagRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DefaultTagLoader {
 
-    private final TagRepository tagRepository;
+    private final TagService tagService;
+
 
     @PostConstruct
     public void loadDefaultTags() {
@@ -37,15 +39,9 @@ public class DefaultTagLoader {
 
         );
 
-        defaultTags.forEach(tagName -> {
-            if (!tagRepository.existsByNameIgnoreCase(tagName)) {
-                Tag tag = Tag.builder()
-                        .name(tagName)
-                        .build();
-                tagRepository.save(tag);
-            }
-        });
+        defaultTags.forEach(tagService::createTag);
 
-        System.out.println("✅ Default tags loaded.");
+        System.out.println("✅ Default tags loaded using TagService.");
+
     }
 }
