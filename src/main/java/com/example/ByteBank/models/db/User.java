@@ -34,27 +34,19 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(name = "profile_picture_url", length = 512)
     private String profilePictureUrl;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    @JoinTable(
-            name = "snippet_tags",
-            joinColumns = @JoinColumn(name = "snippet_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    private Set<Tag> tags = new HashSet<>();
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<Snippet> snippets = new HashSet<>();
 
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
-
-
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserAuth userAuth;
